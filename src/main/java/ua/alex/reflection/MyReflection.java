@@ -1,5 +1,6 @@
 package ua.alex.reflection;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.Arrays;
 
@@ -83,6 +84,9 @@ public class MyReflection {
      * Метод принимает объект и меняет всего его приватные поля на их нулевые значение (null, 0, false etc)+
      */
     public static final void changePrivateFields(Object classInstance) throws IllegalAccessException {
+        if (classInstance == null) {
+            return;
+        }
         Class tmpClass = classInstance.getClass();
         for (Field field : tmpClass.getDeclaredFields()) {
             field.setAccessible(true);
@@ -106,13 +110,59 @@ public class MyReflection {
     /**
      * Принимает объект и вызывает методы проанотированные аннотацией @Run (аннотация Ваша, написать самим)
      */
+    public static final void printAnnotatedMethod(Object classInstance) throws InvocationTargetException, IllegalAccessException {
+        if (classInstance == null) {
+            return;
+        }
+
+        Class tmpClass = classInstance.getClass();
+        Method[] methods = tmpClass.getDeclaredMethods();
+        for (Method method : methods) {
+            Annotation[] annotations = method.getAnnotations();
+            for (Annotation annotation : annotations) {
+                if (annotation instanceof Run) {
+                    method.invoke(classInstance);
+                }
+            }
+
+        }
+
+
+    }
 
     /**
      * Принимает объект. Поля проаннотиваные аннотацией @Inject заполняет объектом того класса который находиться
      * в поле аннотации Class clazz().Если поле аннотации содержит ссылку на Void.class.
      * Создает пустой экзепляр класса, базируясь на типе поля (аннотация Ваша, написать самим)
      */
-//
+    public static final void injectClass(Object classInstance) throws IllegalAccessException, InstantiationException {
+        if (classInstance == null) {
+            return;
+        }
+        Class tmpClass = classInstance.getClass();
+        Field[] fields = tmpClass.getDeclaredFields();
+        for (Field field : fields) {
+            Annotation[] annotations = field.getDeclaredAnnotations();
+            for (Annotation annotation : annotations) {
+                if (annotation instanceof Inject) {
+                    Class aClass = ((Inject) annotation).clazz();
+                    Object tmpObj;
+                    if (aClass == Void.class) {
+                        tmpObj = field.getType().newInstance();
+                    } else {
+                        tmpObj = aClass.newInstance();
+                    }
 
-//
+                    field.setAccessible(true);
+                    field.set(classInstance, tmpObj);
+                    field.setAccessible(false);
+                }
+
+            }
+
+        }
+
+    }
+
+
 }

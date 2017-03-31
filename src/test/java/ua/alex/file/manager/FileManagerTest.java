@@ -24,21 +24,23 @@ class FileManagerTest {
     @BeforeAll
     static void setUp() throws IOException {
 
-        Path rootFolder = Paths.get("to_calc");
-        Files.createDirectory(rootFolder);
-        Files.createFile(Paths.get(rootFolder.toString() + DEFAULT_SEPAPRATOR + "file1.txt"));
-        Files.createFile(Paths.get(rootFolder.toString() + DEFAULT_SEPAPRATOR + "file2.txt"));
-        Path subFolder2 = Files.createDirectory(Paths.get(rootFolder.toString() + DEFAULT_SEPAPRATOR + "subFolder2"));
-        Path subFolder3 = Files.createDirectory(Paths.get(subFolder2.toString() + DEFAULT_SEPAPRATOR + "subFolder3"));
-        Path subFolder3_1 = Files.createDirectory(Paths.get(subFolder3.toString() + DEFAULT_SEPAPRATOR + "subFolder3_1"));
-        Files.createFile(Paths.get(subFolder3.toString() + DEFAULT_SEPAPRATOR + "file3.txt"));
-        Files.createFile(Paths.get(subFolder3_1.toString() + DEFAULT_SEPAPRATOR + "file3_1.txt"));
+        Path rootFolder = Paths.get("to_calc"+ DEFAULT_SEPAPRATOR +"subFolder2"+ DEFAULT_SEPAPRATOR +"subFolder3"+ DEFAULT_SEPAPRATOR +"subFolder3_1");
+        Files.createDirectories(rootFolder);
+        //Files.createDirectory(rootFolder);
+        Files.createFile(Paths.get("to_calc" + DEFAULT_SEPAPRATOR + "file1.txt"));
+        Files.createFile(Paths.get("to_calc" + DEFAULT_SEPAPRATOR + "file2.txt"));
+//        Path subFolder2 = Paths.get(rootFolder.toString() + DEFAULT_SEPAPRATOR + "subFolder2");
+//        Path subFolder3 = Paths.get(subFolder2.toString() + DEFAULT_SEPAPRATOR + "subFolder3");
+//        Path subFolder3_1 = Paths.get(subFolder3.toString() + DEFAULT_SEPAPRATOR + "subFolder3_1");
+        Files.createFile(Paths.get("to_calc"+ DEFAULT_SEPAPRATOR +"subFolder2"+ DEFAULT_SEPAPRATOR +"subFolder3" + DEFAULT_SEPAPRATOR + "file3.txt"));
+        Files.createFile(Paths.get("to_calc"+ DEFAULT_SEPAPRATOR +"subFolder2"+ DEFAULT_SEPAPRATOR +"subFolder3"+ DEFAULT_SEPAPRATOR +"subFolder3_1" + DEFAULT_SEPAPRATOR + "file3_1.txt"));
+        System.out.println("Finish Before All");
     }
 
     @AfterAll
     static void tearDown() throws IOException {
 
-        FileManager.delete(Paths.get("to_calc"));
+        FileManager.delete(Paths.get("to_calc").toAbsolutePath());
     }
 
     @Test
@@ -66,11 +68,4 @@ class FileManagerTest {
         assertTrue(Files.exists(Paths.get("to_calc" + DEFAULT_SEPAPRATOR + "subFolder2" + DEFAULT_SEPAPRATOR + "file1.txt")));
 
     }
-
-    @Test
-    void math() {
-        int r = 23;
-        System.out.println(~r + 1);
-    }
-
 }

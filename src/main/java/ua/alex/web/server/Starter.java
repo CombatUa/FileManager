@@ -11,7 +11,7 @@ public class Starter {
 
         // BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         // BufferedOutputStream bufferedOutputStream = new BufferedOutputStream((socket.getOutputStream()));
-        //System.out.println(System.getenv());
+        // System.out.println(System.getenv());
 
         while (true) {
             Socket socket = serverSocket.accept();

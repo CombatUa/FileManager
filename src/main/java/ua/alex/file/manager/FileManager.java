@@ -1,6 +1,9 @@
 package ua.alex.file.manager;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -70,7 +73,7 @@ public class FileManager {
         if ((from == null || to == null) && (Files.notExists(Paths.get(from)))) {
             return false;
         }
-        MyFiles.copy(Paths.get(from), (Paths.get(to).toFile().isFile()) ? Paths.get(to) : Paths.get(to).resolve(Paths.get(from).getFileName()));
+        MyFiles.copy(Paths.get(from), Paths.get(to));
         return true;
     }
 
@@ -85,11 +88,7 @@ public class FileManager {
         if ((from == null || to == null) && (Files.notExists(Paths.get(from)))) {
             return false;
         }
-        System.out.println(Paths.get(to).getNameCount());
-
-        Path fileName = Paths.get(from).getName(Paths.get(from).getNameCount() - 1);
-
-        copy(from, Paths.get(to).resolve(fileName).toString());
+        copy(from, to);
         delete(Paths.get(from));
 //        Paths.get(to).toFile().renameTo(fileName.toFile());
 //        Files.move(Paths.get(from), Paths.get(to).resolve(Paths.get(from).getFileName()));
@@ -99,28 +98,29 @@ public class FileManager {
     public static boolean delete(Path path) throws IOException {
 
 
-        Files.list(path).forEach(
-                s -> {
-                    try {
-                        if (s.toFile().isDirectory()) {
-                            System.out.println("to Directory:" + s.toAbsolutePath());
-                            FileManager.delete(s);
-                        } else {
-                            System.out.println("Delete File:" + s.toAbsolutePath());
-                            Files.delete(s);
+        if (path.toFile().isDirectory()) {
+
+            Files.list(path).forEach(
+                    s -> {
+                        try {
+                            if (s.toFile().isDirectory()) {
+                                FileManager.delete(s);
+                            } else {
+                                Files.delete(s);
+                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
 
-                    } catch (IOException e) {
-                        System.out.println("In Exception:");
-                        e.printStackTrace();
                     }
 
-                }
+            );
 
-        );
-        System.out.println("Delete path:" + path.toAbsolutePath());
-        Files.delete(path);
-        System.out.println("out from delete");
+            Files.delete(path);
+        } else {
+            Files.delete(path);
+        }
         return true;
     }
 

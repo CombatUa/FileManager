@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by Manny on 3/26/17.
- */
+
 public class MyHashMap {
 
     private int capacity;
